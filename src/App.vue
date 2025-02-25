@@ -23,14 +23,15 @@ const fetchFiles = async (path = "") => {
   filePath.value = "";
   editedContent.value = "";
 
-  if (!owner.value || !repo.value || !token.value) {
-    error.value = "Please enter the GitHub owner, repository, or token!";
+  if (!owner.value || !repo.value) {
+    error.value = "Please enter the GitHub owner and repository!";
     return;
   }
 
   const url = `https://api.github.com/repos/${owner.value}/${repo.value}/contents/${path}`;
   const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json" };
-  if (token.value) headers["Authorization"] = `token ${token.value}`;
+  
+  if (token.value) headers["Authorization"] = `token ${token.value}`; // Only add if token exists
 
   try {
     const response = await axios.get(url, { headers });
@@ -47,35 +48,38 @@ const fetchFiles = async (path = "") => {
       error.value = "Failed to fetch files!";
     }
   } catch {
-    error.value = "Error fetching files!";
+    error.value = "Error fetching files! The repository may be private or not exist.";
   }
 };
+
 
 // Fetch file content
 const fetchFile = async (path: string) => {
   error.value = "";
   fileContent.value = "";
   filePath.value = path;
-  editedContent.value = localStorage.getItem(`localEdit_${path}`) || ""; // Load local edits
+  editedContent.value = localStorage.getItem(`localEdit_${path}`) || "";
 
   const url = `https://api.github.com/repos/${owner.value}/${repo.value}/contents/${path}`;
   const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json" };
-  if (token.value) headers["Authorization"] = `token ${token.value}`;
+  
+  if (token.value) headers["Authorization"] = `token ${token.value}`; // Only add if token exists
 
   try {
     const response = await axios.get(url, { headers });
     if (response.data.content) {
       fileContent.value = atob(response.data.content);
       if (!editedContent.value) {
-        editedContent.value = fileContent.value; // Load file if no local edits exist
+        editedContent.value = fileContent.value;
       }
     } else {
       error.value = "File not found or error fetching file!";
     }
   } catch {
-    error.value = "Error fetching file!";
+    error.value = "Error fetching file! The file may be private or not exist.";
   }
 };
+
 
 const modifiedFiles = ref<Record<string, string>>({}); // Store file path -> content
 
