@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
-import HelloWorld from './components/test.vue';
-import Sidebar from './components/Sidebar.vue';
+import test from "./components/janelaLateral.vue";
 
 // State variables
 const owner = ref(localStorage.getItem("githubOwner") || "");
@@ -32,7 +31,7 @@ const fetchFiles = async (path = "") => {
 
   const url = `https://api.github.com/repos/${owner.value}/${repo.value}/contents/${path}`;
   const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json" };
-  
+
   if (token.value) headers["Authorization"] = `token ${token.value}`; // Only add if token exists
 
   try {
@@ -64,7 +63,7 @@ const fetchFile = async (path: string) => {
 
   const url = `https://api.github.com/repos/${owner.value}/${repo.value}/contents/${path}`;
   const headers: Record<string, string> = { Accept: "application/vnd.github.v3+json" };
-  
+
   if (token.value) headers["Authorization"] = `token ${token.value}`; // Only add if token exists
 
   try {
@@ -224,8 +223,8 @@ const commitChanges = async () => {
 </script>
 
 <template>
-<Sidebar/>
-<HelloWorld />
+  <test />
+
   <div class="container">
     <h2>Lightweigth online editor</h2>
 
