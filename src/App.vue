@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
+import HelloWorld from './components/test.vue';
 
 // State variables
 const owner = ref(localStorage.getItem("githubOwner") || "");
@@ -222,6 +223,7 @@ const commitChanges = async () => {
 </script>
 
 <template>
+<HelloWorld />
   <div class="container">
     <h2>Lightweigth online editor</h2>
 
